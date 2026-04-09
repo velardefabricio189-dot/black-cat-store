@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import type { Product } from '../../../types/index'
+import Link from 'next/link'
+import { Pencil } from 'lucide-react'
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, isAdmin = false }: { product: Product, isAdmin?: boolean }) {
   const imageUrl = product.image_url || 'https://placehold.co/400x400?text=Producto'
   
   // verifica el stock :V
@@ -9,12 +11,26 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden border hover:shadow-md transition-shadow group">
+      
+   
       <div className="relative aspect-square bg-gray-100 overflow-hidden">
+        
+
+        {isAdmin && (
+          <Link 
+            href={`/admin/productos/editar/${product.id}`}
+            className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-blue-600 p-2 rounded-full shadow-lg z-20 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 hover:bg-white hover:scale-110 flex items-center justify-center w-9 h-9 border border-gray-100"
+            title="Editar producto"
+          >
+            <Pencil className="w-4 h-4" strokeWidth={2.5} />
+          </Link>
+        )}
+
         <Image
           src={imageUrl}
           alt={product.name}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300" // Un pequeño efecto hover opcional
+          className="object-cover group-hover:scale-105 transition-transform duration-300" 
           sizes="(max-width: 768px) 50vw, 25vw"
           priority={true} 
         />

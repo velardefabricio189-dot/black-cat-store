@@ -17,13 +17,13 @@ export default function LoginPage() {
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
+   if (error) {
       setError('Credenciales incorrectas')
       setLoading(false)
       return
     }
 
-    router.push('/admin')
+    router.push('/') 
     router.refresh()
   }
 

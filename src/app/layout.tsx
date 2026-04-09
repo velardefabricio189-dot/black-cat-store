@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getCategories } from '../app/lib/supabase/queries'
+import { createClient } from '../app/lib/supabase/server' 
 import Sidebar from '../app/components/layout/Sidebar'
 import MobileNav from '../app/components/layout/MobileNav'
 import './globals.css'
@@ -16,19 +17,27 @@ export default async function RootLayout({
 }) {
   const categories = await getCategories()
 
+  // 2. Verificamos si hay un administrador logueado
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const isAdmin = !!user
+
   return (
     <html lang="es">
       <body className="bg-gray-50 text-gray-900">
         <div className="flex min-h-screen">
-          {/* Sidebar desktop */}
-          <Sidebar categories={categories} />
+          
+          {/* 3. Le pasamos el isAdmin al Sidebar desktop */}
+          <Sidebar categories={categories} isAdmin={isAdmin} />
 
           {/* main content */}
           <div className="flex-1 flex flex-col">
-            {/*header para moviles */}
+            
+            {/* header para moviles */}
             <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b">
               <span className="font-semibold text-lg">Mi Catálogo</span>
-              <MobileNav categories={categories} />
+              {/* 4. Le pasamos el isAdmin al MobileNav también */}
+              <MobileNav categories={categories} isAdmin={isAdmin} />
             </header>
 
             <main className="flex-1 p-4 md:p-8">

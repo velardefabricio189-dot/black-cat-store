@@ -1,7 +1,13 @@
 import Link from 'next/link'
 import type { Category } from '../../../types/index'
+import LogoutButton from '../../admin/LoggoutButton'
 
-export default function Sidebar({ categories }: { categories: Category[] }) {
+type Props = {
+  categories: Category[]
+  isAdmin: boolean
+}
+
+export default function Sidebar({ categories, isAdmin }: Props){
   return (
     <aside className="hidden md:flex flex-col w-56 min-h-screen bg-black border-r px-4 py-6 shrink-0">
       <Link href="/" className="text-xl font-bold mb-8 block">
@@ -29,6 +35,12 @@ export default function Sidebar({ categories }: { categories: Category[] }) {
           </Link>
         ))}
       </nav>
+
+      {isAdmin && (
+        <div className="mt-auto pt-4 border-t">
+          <LogoutButton />
+        </div>
+      )}
     </aside>
   )
 }

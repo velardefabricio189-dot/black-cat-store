@@ -3,13 +3,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import type { Category } from '../../../types/index'
+type Props = {
+  categories: Category[]
+  isAdmin: boolean
+}
 
-export default function MobileNav({ categories }: { categories: Category[] }) {
+export default function MobileNav({ categories, isAdmin }: Props) {
   const [open, setOpen] = useState(false)
+
 
   return (
     <>
-      {/* Botón hamburger */}
       <button
         onClick={() => setOpen(true)}
         className="p-2 rounded-lg hover:bg-gray-100"
@@ -20,7 +24,6 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
         <span className="block w-5 h-0.5 bg-gray-700" />
       </button>
 
-      {/* Overlay */}
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40"
@@ -28,7 +31,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
         />
       )}
 
-      {/* Drawer */}
+
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl
           transform transition-transform duration-300
