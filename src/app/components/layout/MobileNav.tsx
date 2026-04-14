@@ -1,55 +1,38 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import type { Category } from '../../../types/index'
+import { useState } from "react";
+import Link from "next/link";
+import type { Category } from "../../../types/index";
+import { Menu } from "lucide-react";
 type Props = {
-  categories: Category[]
-  isAdmin: boolean
-}
+  categories: Category[];
+};
+import Image from "next/image";
 
-export default function MobileNav({ categories, isAdmin }: Props) {
-  const [open, setOpen] = useState(false)
-
+export default function MobileNav({ categories }: Props) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="p-2 rounded-lg hover:bg-gray-100"
-        aria-label="Abrir menú"
-      >
-        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
-        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
-        <span className="block w-5 h-0.5 bg-gray-700" />
+      <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-gray-100" aria-label="Abrir menú">
+        <Menu className="text-white" />
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
+      {open && <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setOpen(false)} />}
 
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl
           transform transition-transform duration-300
-          ${open ? 'translate-x-0' : '-translate-x-full'}`}
+          ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="flex items-center justify-between px-4 py-4 border-b">
-          <span className="font-bold text-lg">LOGO</span>
-          <button onClick={() => setOpen(false)} className="text-gray-500 text-xl">
-            ✕
-          </button>
+        <div className="flex items-center justify-center gap-x-3 mt-5">
+          <Image src="/cat-logo-light.png" alt="Logo" width={50} height={50} />
+          <span className="font-black">BLACK CAT</span>
         </div>
 
+        <span className="ml-5 text-xs font-semibold uppercase tracking-widest text-gray-400 mt-10">Categorias</span>
         <nav className="flex flex-col gap-1 px-3 py-4">
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className="text-sm px-3 py-2 rounded-lg hover:bg-gray-100"
-          >
+          <Link href="/" onClick={() => setOpen(false)} className="text-sm px-3 py-2 rounded-lg hover:bg-gray-100">
             Todos
           </Link>
           {categories.map((cat) => (
@@ -65,5 +48,5 @@ export default function MobileNav({ categories, isAdmin }: Props) {
         </nav>
       </div>
     </>
-  )
+  );
 }

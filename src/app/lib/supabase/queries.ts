@@ -70,3 +70,29 @@ export async function getProductsByCategory(slug: string): Promise<Product[]> {
   if (error) throw error
   return data ?? []
 }
+
+export async function getProductById(id: string): Promise<Product | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('products')
+    .select(`
+      *,
+      categories!inner(name, slug),
+      product_images(
+        id,
+        url,
+        is_primary,
+        sort_order
+      )
+    `)
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    if (error.code === 'PGRST116') return null // Not found
+    throw error
+  }
+  
+  return data as Product;
+}
