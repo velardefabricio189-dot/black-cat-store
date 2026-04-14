@@ -2,20 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Category } from "../../../types/index";
-import { Menu } from "lucide-react";
+import type { Category } from "@/src/types/index";
 type Props = {
   categories: Category[];
+  isAdmin: boolean;
 };
-import Image from "next/image";
 
-export default function MobileNav({ categories }: Props) {
+export default function MobileNav({ categories, isAdmin }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-gray-100" aria-label="Abrir menú">
-        <Menu className="text-white" />
+        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
+        <span className="block w-5 h-0.5 bg-gray-700 mb-1" />
+        <span className="block w-5 h-0.5 bg-gray-700" />
       </button>
 
       {open && <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setOpen(false)} />}
@@ -25,12 +26,13 @@ export default function MobileNav({ categories }: Props) {
           transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="flex items-center justify-center gap-x-3 mt-5">
-          <Image src="/cat-logo-light.png" alt="Logo" width={50} height={50} />
-          <span className="font-black">BLACK CAT</span>
+        <div className="flex items-center justify-between px-4 py-4 border-b">
+          <span className="font-bold text-lg">LOGO</span>
+          <button onClick={() => setOpen(false)} className="text-gray-500 text-xl">
+            ✕
+          </button>
         </div>
 
-        <span className="ml-5 text-xs font-semibold uppercase tracking-widest text-gray-400 mt-10">Categorias</span>
         <nav className="flex flex-col gap-1 px-3 py-4">
           <Link href="/" onClick={() => setOpen(false)} className="text-sm px-3 py-2 rounded-lg hover:bg-gray-100">
             Todos
@@ -38,7 +40,7 @@ export default function MobileNav({ categories }: Props) {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={`/categoria/${cat.slug}`}
+              href={`admin/category/${cat.slug}`}
               onClick={() => setOpen(false)}
               className="text-sm px-3 py-2 rounded-lg hover:bg-gray-100"
             >
