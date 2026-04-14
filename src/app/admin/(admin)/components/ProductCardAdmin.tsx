@@ -54,7 +54,7 @@ export default function ProductCardAdmin({ product }: { product: Product }) {
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-white truncate">{product.name}</h3>
+        <h3 className="font-semibold dark:text-white truncate">{product.name}</h3>
         <p className="text-sm font-medium text-gray-700 mt-1">${product.price.toFixed(2)}</p>
 
         <div className="text-xs text-gray-500 mt-2 mb-4">

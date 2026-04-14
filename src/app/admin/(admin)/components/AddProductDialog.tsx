@@ -67,10 +67,10 @@ export default function AddProductDialog({ categoryId }: Props) {
             <label className="block text-sm mb-1">Descripción</label>
             <Textarea name="description" rows={3} />
           </div>
-          <div>
-            <label className="block text-sm mb-1">Imagen (Opcional por ahora)</label>
+          {/* <div>
+            <label className="block text-sm mb-1">Imagen</label>
             <Input name="image" type="file" accept="image/*" />
-          </div>
+          </div> */}
           <div className="flex justify-end mt-4">
             <Button type="submit" disabled={loading}>
               {loading ? "Guardando..." : "Crear Producto"}
