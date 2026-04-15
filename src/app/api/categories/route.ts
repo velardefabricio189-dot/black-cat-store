@@ -51,7 +51,7 @@ import { createClient } from '../../lib/supabase/server'
  *         description: No autorizado
  */
 
-// Obtener categorías (GET)
+// Obtener categorias (GET)
 export async function GET() {
   const supabase = await createClient()
   
