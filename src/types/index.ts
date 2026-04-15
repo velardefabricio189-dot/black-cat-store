@@ -4,7 +4,8 @@ export type Category = {
   slug: string
   description: string | null
   sort_order: number
-  image_url: string | null
+  image_url: string | null   
+  public_url: string | null  
 }
 
 export type ProductImage = {

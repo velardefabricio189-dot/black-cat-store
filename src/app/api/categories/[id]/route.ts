@@ -1,0 +1,102 @@
+import { NextResponse } from 'next/server'
+import { createClient } from '../../../lib/supabase/server'
+
+/**
+ * @swagger
+ * /api/categories/{id}:
+ *   get:
+ *     tags: [Categorias]
+ *     summary: Obtiene el detalle de una categoría
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Detalle de la categoría
+ *       404:
+ *         description: Categoría no encontrada
+ *   patch:
+ *     tags: [Categorias]
+ *     summary: Editar una categoria
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               slug:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               sort_order:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Categoría actualizada
+ *       400:
+ *         description: No se enviaron datos válidos
+ *       401:
+ *         description: No autorizado
+ */
+
+type Params = { params: Promise<{ id: string }> }
+
+export async function GET(_request: Request, { params }: Params) {
+  const supabase = await createClient()
+  const { id } = await params
+
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) return NextResponse.json({ error: 'Categoría no encontrada' }, { status: 404 })
+  return NextResponse.json({ data })
+}
+
+export async function PATCH(request: Request, { params }: Params) {
+  const supabase = await createClient()
+  //const { data: { user } } = await supabase.auth.getUser()
+  //if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
+  const { id } = await params
+  const body = await request.json()
+
+  const allowedFields = ['name', 'slug', 'description', 'sort_order']
+  const updates: Record<string, unknown> = {}
+
+  Object.keys(body).forEach(key => {
+    if (allowedFields.includes(key) && body[key] !== undefined) {
+      updates[key] = body[key]
+    }
+  })
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json(
+      { error: 'No se enviaron datos válidos para actualizar' },
+      { status: 400 }
+    )
+  }
+
+  const { data, error } = await supabase
+    .from('categories')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ data })
+}
