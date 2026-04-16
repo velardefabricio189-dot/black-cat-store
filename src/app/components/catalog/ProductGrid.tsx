@@ -1,9 +1,12 @@
 import ProductCard from "./ProductCard";
 import type { Product } from "../../../types/index";
+Props:{
+  isAdmin: Boolean
+}
 
-export default function ProductGrid({ products }: { products: Product[] }) {
+export default function ProductGrid({ products, isAdmin }: { products: Product[], isAdmin: boolean }) {
   if (products.length === 0) {
-    return <p className="text-gray-400 text-sm mt-8 text-center">No hay productos en esta categoría.</p>;
+    return <p className="text-gray-400 text-sm mt-8 text-center">No hay productos en esta categoría. HOLAAAA</p>;
   }
 
   return (
