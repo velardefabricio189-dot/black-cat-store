@@ -26,7 +26,7 @@ export default function MobileNav({ categories }: Props) {
           ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex items-center justify-center gap-x-3 mt-5">
-          <Image src="/cat-logo-light.png" alt="Logo" width={50} height={50} />
+          <Image src="/cat-logo-light.png" alt="Logo" width={50} height={50} className="w-auto h-auto" />
           <span className="font-black">BLACK CAT</span>
         </div>
 
