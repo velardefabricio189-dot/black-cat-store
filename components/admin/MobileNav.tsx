@@ -3,6 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Category } from "@/src/types/index";
+
+import CreateCategoryDialog from "./CreateCategoryDialog";
+import LogoutButton from "@/src/app/admin/LoggoutButton";
+
 type Props = {
   categories: Category[];
   isAdmin: boolean;
@@ -22,18 +26,27 @@ export default function MobileNav({ categories, isAdmin }: Props) {
       {open && <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setOpen(false)} />}
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl
+        // Añadí 'flex flex-col' aquí para poder empujar el botón de cerrar sesión hacia abajo
+        className={`fixed top-0 left-0 h-full w-64 bg-black z-50 shadow-xl flex flex-col
           transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b">
-          <span className="font-bold text-lg">LOGO</span>
+          <span className="font-bold text-white text-lg">BLACK CAT</span>
           <button onClick={() => setOpen(false)} className="text-gray-500 text-xl">
             ✕
           </button>
         </div>
 
-        <nav className="flex flex-col gap-1 px-3 py-4">
+        {/* AQUÍ AGREGAMOS EL BOTÓN DE CREAR CATEGORÍA */}
+        {isAdmin && (
+          <div className="px-4 py-4 border-b">
+            <CreateCategoryDialog />
+          </div>
+        )}
+
+
+        <nav className="flex flex-col gap-1 px-3 py-4 overflow-y-auto text-white flex-1">
           {categories.map((cat) => (
             <Link
               key={cat.id}
@@ -45,6 +58,13 @@ export default function MobileNav({ categories, isAdmin }: Props) {
             </Link>
           ))}
         </nav>
+
+
+        {isAdmin && (
+          <div className="p-4 border-t mt-auto">
+            <LogoutButton />
+          </div>
+        )}
       </div>
     </>
   );

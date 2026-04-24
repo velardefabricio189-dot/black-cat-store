@@ -81,7 +81,9 @@ export async function getAllProductsByCategory(slug: string): Promise<Product[]>
         url,
         is_primary,
         sort_order
-      )
+      ),
+      product_colors(color_id),
+      product_sizes(size_id)
     `,
     )
     .eq("categories.slug", slug)
@@ -106,6 +108,14 @@ export async function getProductById(id: string): Promise<Product | null> {
         url,
         is_primary,
         sort_order
+      ),
+      product_colors(
+        color_id,
+        colors(id, name, hex)
+      ),
+      product_sizes(
+        size_id,
+        sizes(id, name, sort_order)
       )
     `,
     )
