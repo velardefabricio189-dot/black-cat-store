@@ -25,6 +25,15 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
   }
 
   const allImages = product.product_images ?? [];
+  const availableSizes = product.product_sizes
+    ?.map((item) => item.sizes?.name)
+    .filter(Boolean) 
+    .join(", ");
+
+  const availableColors = product.product_colors
+    ?.map((item) => item.colors?.name)
+    .filter(Boolean)
+    .join(", ");
 
   const headersList = await headers();
   const host = headersList.get("host");
@@ -82,6 +91,22 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
               <p className="text-white/80 leading-relaxed font-light drop-shadow-sm">
                 {product.description || "No hay descripción detallada disponible para este producto."}
               </p>
+
+              <div className="space-y-2 mt-4 text-white/90 font-light">
+                {availableSizes && (
+                  <p>
+                    <span className="font-semibold text-white mr-2">Tallas disponibles:</span> 
+                    {availableSizes}
+                  </p>
+                )}
+                
+                {availableColors && (
+                  <p>
+                    <span className="font-semibold text-white mr-2">Colores disponibles:</span> 
+                    {availableColors}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-6">

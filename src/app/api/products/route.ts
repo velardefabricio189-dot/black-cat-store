@@ -79,26 +79,30 @@ export async function GET(request: Request) {
 
 
 // POST de los productos
+// POST de los productos
 export async function POST(request: Request) {
-   const { supabase, unauthorizedResponse } = await requireUser()
+  const { supabase, unauthorizedResponse } = await requireUser()
   if (unauthorizedResponse) {
     return unauthorizedResponse
   }
+
   const formData = await request.formData()
   const name        = formData.get('name') as string
   const description = formData.get('description') as string
   const price       = formData.get('price') as string
   const category_id = formData.get('category_id') as string
   const stock       = formData.get('stock') as string
+  const color_ids   = JSON.parse((formData.get('color_ids') as string) || '[]')
+  const size_ids    = JSON.parse((formData.get('size_ids') as string) || '[]')
 
-  // 3. Validar campos requeridos
   if (!name || !price || !category_id) {
     return NextResponse.json(
       { error: 'name, price y category_id son requeridos' },
       { status: 400 }
     )
   }
-  const { data, error } = await supabase
+
+  const { data: productData, error: productError } = await supabase
     .from('products')
     .insert({
       name,
@@ -111,6 +115,26 @@ export async function POST(request: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ data }, { status: 201 })
+  if (productError) return NextResponse.json({ error: productError.message }, { status: 500 })
+
+  if (color_ids.length > 0) {
+    const colorInserts = color_ids.map((colorId: string) => ({
+      product_id: productData.id,
+      color_id: colorId
+    }))
+    const { error: colorsError } = await supabase.from('product_colors').insert(colorInserts)
+    if (colorsError) console.error("Error guardando colores:", colorsError)
+    }
+
+
+  if (size_ids.length > 0) {
+    const sizeInserts = size_ids.map((sizeId: string) => ({
+      product_id: productData.id,
+      size_id: sizeId
+    }))
+    const { error: sizesError } = await supabase.from('product_sizes').insert(sizeInserts)
+    if (sizesError) console.error("Error guardando tallas:", sizesError)
+  }
+
+  return NextResponse.json({ data: productData }, { status: 201 })
 }

@@ -72,14 +72,13 @@ import { get } from 'http'
 
 type Params = { params: Promise<{ id: string }> }
 
-//PATCH  para actualizar un producto
+//PATCH para actualizar un producto (solo campos enviados en el body, y manejo de colores/tallas relacionados)
 export async function PATCH(request: Request, { params }: Params) {
-  const { supabase, unauthorizedResponse} = await requireUser() 
-if (unauthorizedResponse) return unauthorizedResponse
+  const { supabase, unauthorizedResponse } = await requireUser() 
+  if (unauthorizedResponse) return unauthorizedResponse
 
   const { id } = await params
   const body = await request.json()
-
   const allowedFields = ['name', 'description', 'price', 'category_id', 'stock', 'active']
   const updates: Record<string, unknown> = {}
 
@@ -89,23 +88,33 @@ if (unauthorizedResponse) return unauthorizedResponse
     }
   })
 
-  if (Object.keys(updates).length === 0) {
-    return NextResponse.json(
-      { error: 'No se enviaron datos validos para actualizar' },
-      { status: 400 }
-    )
+  if (Object.keys(updates).length > 0) {
+    const { error } = await supabase.from('products').update(updates).eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const { data, error } = await supabase
-    .from('products')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (body.color_ids !== undefined) {
+    // A) Borrar anteriores
+    await supabase.from('product_colors').delete().eq('product_id', id)
+    if (body.color_ids.length > 0) {
+      const colorInserts = body.color_ids.map((colorId: string) => ({ product_id: id, color_id: colorId }))
+      await supabase.from('product_colors').insert(colorInserts)
+    }
+  }
 
-  return NextResponse.json({ data })
+
+  if (body.size_ids !== undefined) {
+
+    await supabase.from('product_sizes').delete().eq('product_id', id)
+
+    if (body.size_ids.length > 0) {
+      const sizeInserts = body.size_ids.map((sizeId: string) => ({ product_id: id, size_id: sizeId }))
+      await supabase.from('product_sizes').insert(sizeInserts)
+    }
+  }
+
+  return NextResponse.json({ message: 'Producto actualizado con éxito' })
 }
 
 //función para desactivar un producto (active = false)

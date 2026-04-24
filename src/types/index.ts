@@ -17,6 +17,16 @@ export type ProductImage = {
   sort_order: number
 }
 
+export type Color = {
+  id: string
+  name: string
+}
+
+export type Size = {
+  id: string
+  name: string
+}
+
 export type Product = {
   id: string
   category_id: string | null
@@ -29,6 +39,9 @@ export type Product = {
   // relaciones
   categories?: Pick<Category, 'name' | 'slug'>
   product_images?: ProductImage[]
+
+  product_colors?: { color_id: string; colors: Color }[];
+  product_sizes?: { size_id: string; sizes: Size }[];
 }
 
 

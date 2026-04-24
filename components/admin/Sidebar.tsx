@@ -58,7 +58,7 @@ export default function Sidebar({ categories: initialCategories, isAdmin }: Prop
     <DndProvider backend={HTML5Backend}>
       <aside className="hidden md:flex flex-col w-56 h-screen sticky top-0 overflow-y-auto bg-black border-r px-4 py-6 shrink-0 ">
         <div className="flex items-center justify-center gap-x-3">
-          <Image src="/catlogo.png" alt="Logo" width={50} height={50} />
+          <Image src="/catlogo.png" alt="Logo" width={50} height={50} style={{ width: "50px", height: "auto" }} />
           <span className="font-black text-white">BLACK CAT</span>
         </div>
 
